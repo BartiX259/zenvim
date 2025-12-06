@@ -10,3 +10,8 @@ A simple and chill neovim configuration.
 - File finder + explorer ([snacks](https://github.com/folke/snacks.nvim))
 - Tabs ([barbar](https://github.com/romgrk/barbar.nvim))
 
+## screenshots
+
+![file screenshot](.examples/file.png)
+![explorer screenshot](.examples/explorer.png)
+

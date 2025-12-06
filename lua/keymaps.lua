@@ -10,60 +10,39 @@ end
 vim.keymap.set("n", "n", function()
 	vim.cmd("normal! n")
 	vim.opt.hlsearch = true
-end)
+end, { desc = "Next search result" })
+
 vim.keymap.set("n", "N", function()
 	vim.cmd("normal! N")
 	vim.opt.hlsearch = true
-end)
+end, { desc = "Prev search result" })
 
 --- Lsp
-vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-vim.keymap.set("n", "<leader>cn", vim.diagnostic.goto_next, {})
-vim.keymap.set("n", "<leader>cp", vim.diagnostic.goto_prev, {})
-vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
+vim.keymap.set("n", "<leader>cn", function()
+	vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Next diagnostic" })
+
+vim.keymap.set("n", "<leader>cp", function()
+	vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Prev diagnostic" })
+
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, desc = "Goto declaration" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Goto definition" })
 
 -- Buffers
 vim.keymap.set("n", "<TAB>", function()
 	vim.cmd("BufferNext")
-end, {})
+end, { desc = "Next buffer" })
+
 vim.keymap.set("n", "<S-TAB>", function()
 	vim.cmd("BufferPrevious")
-end, {})
+end, { desc = "Prev buffer" })
+
 vim.keymap.set("n", "<leader>x", function()
 	vim.cmd("BufferClose")
-end, {})
-vim.keymap.set("n", "<leader>1", function()
-	vim.cmd("BufferGoto 1")
-end)
-vim.keymap.set("n", "<leader>2", function()
-	vim.cmd("BufferGoto 2")
-end)
-vim.keymap.set("n", "<leader>3", function()
-	vim.cmd("BufferGoto 3")
-end)
-vim.keymap.set("n", "<leader>4", function()
-	vim.cmd("BufferGoto 4")
-end)
-vim.keymap.set("n", "<leader>5", function()
-	vim.cmd("BufferGoto 5")
-end)
-vim.keymap.set("n", "<leader>6", function()
-	vim.cmd("BufferGoto 6")
-end)
-vim.keymap.set("n", "<leader>7", function()
-	vim.cmd("BufferGoto 7")
-end)
-vim.keymap.set("n", "<leader>8", function()
-	vim.cmd("BufferGoto 8")
-end)
-vim.keymap.set("n", "<leader>9", function()
-	vim.cmd("BufferGoto 9")
-end)
-vim.keymap.set("n", "<leader>0", function()
-	vim.cmd("BufferLast")
-end)
+end, { desc = "Close buffer" })
 
 -- File finding
 local function get_cwd_if_dir()
@@ -77,51 +56,46 @@ end
 -- Keymaps
 vim.keymap.set("n", "<leader>e", function()
 	Snacks.explorer({ cwd = get_cwd_if_dir() })
-end)
+end, { desc = "File Explorer" })
 
 vim.keymap.set("n", "<leader>s", function()
 	Snacks.picker.files({ cwd = get_cwd_if_dir() })
-end)
+end, { desc = "Find files" })
 
 vim.keymap.set("n", "<leader>r", function()
 	Snacks.picker.recent()
-end)
+end, { desc = "Recent files" })
 
 vim.keymap.set("n", "<leader>g", function()
 	Snacks.picker.grep({ cwd = get_cwd_if_dir() })
-end)
+end, { desc = "Grep (root dir)" })
 
 --- Insert mode
 vim.g.better_escape_shortcut = { "jk", "kj" }
-vim.keymap.set("i", "<C-Backspace>", lazy_comb("db"))
-vim.keymap.set("i", "<C-Delete>", lazy_comb("de"))
-vim.keymap.set("i", "<C-v>", lazy_comb("[pl"))
+vim.keymap.set("i", "<C-Backspace>", lazy_comb("db"), { desc = "Delete word backward" })
+vim.keymap.set("i", "<C-Delete>", lazy_comb("de"), { desc = "Delete word forward" })
+vim.keymap.set("i", "<C-v>", lazy_comb("[pl"), { desc = "Paste from clipboard" })
 
 --- Better indenting
-vim.keymap.set("v", ">", lazy_comb(">gv"))
-vim.keymap.set("v", "<", lazy_comb("<gv"))
+vim.keymap.set("v", ">", lazy_comb(">gv"), { desc = "Indent right" })
+vim.keymap.set("v", "<", lazy_comb("<gv"), { desc = "Indent left" })
 
 --- Remaps from theprimeagen
-vim.keymap.set("n", "<A-o>", "o<Esc>")
-vim.keymap.set("n", "<A-O>", "O<Esc>")
+vim.keymap.set("n", "<A-o>", "o<Esc>", { desc = "Insert newline below" })
+vim.keymap.set("n", "<A-O>", "O<Esc>", { desc = "Insert newline above" })
 
-vim.keymap.set("n", "J", lazy_comb("mzJ`z"))
-vim.keymap.set("n", "<C-d>", lazy_comb("<C-d>zz"))
-vim.keymap.set("n", "<C-u>", lazy_comb("<C-u>zz"))
+vim.keymap.set("n", "J", lazy_comb("mzJ`z"), { desc = "Join lines" })
+vim.keymap.set("n", "<C-d>", lazy_comb("<C-d>zz"), { desc = "Scroll down" })
+vim.keymap.set("n", "<C-u>", lazy_comb("<C-u>zz"), { desc = "Scroll up" })
 
 -- greatest remap ever
-vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste (keep register)" })
 
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete (no yank)" })
 
 -- This is going to get me cancelled
-vim.keymap.set("i", "<C-c>", "<Esc>")
-
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape" })
 
 vim.keymap.set("n", "<leader><leader>", function()
 	vim.cmd("so")
-end)
+end, { desc = "Source file" })
