@@ -6,7 +6,7 @@ local lazy_comb = function(comb)
   end
 end
 
--- Hightlight search
+-- Highlight search
 vim.keymap.set("n", "n", function()
   vim.cmd("normal! n")
   vim.opt.hlsearch = true
@@ -53,12 +53,6 @@ local function get_cwd_if_dir()
   return nil
 end
 vim.keymap.set("n", "<leader>e", function()
-  -- Dashboard bugfix
-  if vim.bo.filetype == "snacks_dashboard" and #vim.api.nvim_list_bufs() <= 1 then
-    vim.cmd("enew")
-    vim.bo.bufhidden = "wipe"
-    vim.bo.buftype = "nofile"
-  end
   Snacks.explorer({ cwd = get_cwd_if_dir() })
 end, { desc = "File Explorer" })
 vim.keymap.set("n", "<leader>s", function()
@@ -79,6 +73,9 @@ vim.g.better_escape_shortcut = { "jk", "kj" }
 vim.keymap.set("i", "<C-Backspace>", lazy_comb("db"), { desc = "Delete word backward" })
 vim.keymap.set("i", "<C-Delete>", lazy_comb("de"), { desc = "Delete word forward" })
 vim.keymap.set("i", "<C-v>", lazy_comb("[pl"), { desc = "Paste from clipboard" })
+
+--- Ctrl+s to save
+vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Save" })
 
 --- Better indenting
 vim.keymap.set("v", ">", lazy_comb(">gv"), { desc = "Indent right" })

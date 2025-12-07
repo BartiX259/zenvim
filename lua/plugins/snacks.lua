@@ -32,13 +32,6 @@ return {
           jump = { close = true },
           layout = {
             backdrop = false,
-            preset = "sidebar",
-            preview = "main",
-            layout = {
-              position = "left",
-              width = 40, -- FORCE the sidebar width (adjust to preference)
-              min_width = 40,
-            },
           },
         },
       },
@@ -85,10 +78,7 @@ return {
             icon = "󰉋 ",
             key = "e",
             desc = "File Explorer",
-            action = function()
-              vim.cmd("enew")
-              Snacks.explorer()
-            end,
+            action = ":lua Snacks.explorer()",
           },
           {
             icon = " ",

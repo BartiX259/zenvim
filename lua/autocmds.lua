@@ -64,6 +64,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
     local ok, pickers = pcall(Snacks.picker.get, { source = "explorer" })
     if ok and pickers then
       for _, picker in ipairs(pickers) do
+        print("CLOSE")
         picker:close()
       end
     end
