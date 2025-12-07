@@ -1,92 +1,71 @@
 return {
-	{
-		"williamboman/mason-lspconfig.nvim",
-		opts = {
-			-- list of servers for mason to install
-			ensure_installed = {
-				"lua_ls",
-			},
-		},
-		dependencies = {
-			{
-				"williamboman/mason.nvim",
-				opts = {
-					ui = {
-						icons = {
-							package_installed = "✓",
-							package_pending = "➜",
-							package_uninstalled = "✗",
-						},
-					},
-				},
-			},
-			"neovim/nvim-lspconfig",
-		},
-	},
-	{
-		"folke/lazydev.nvim",
-		ft = "lua", -- only load on lua files
-		opts = {
-			library = {
-				-- See the configuration section for more details
-				-- Load luvit types when the `vim.uv` word is found
-				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-			},
-		},
-	},
-	{
-		{
-			"hrsh7th/nvim-cmp",
-			event = "InsertEnter",
-			dependencies = {
-				-- snippet plugin
-				{
-					"L3MON4D3/LuaSnip",
-					dependencies = "rafamadriz/friendly-snippets",
-				},
-				-- autopairs
-				{
-					"windwp/nvim-autopairs",
-					config = function(_, opts)
-						require("nvim-autopairs").setup(opts)
-						-- setup cmp for autopairs
-						local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-						require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-					end,
-				},
-				-- sources
-				{
-					"saadparwaiz1/cmp_luasnip",
-					"hrsh7th/cmp-nvim-lua",
-					"hrsh7th/cmp-nvim-lsp",
-					"hrsh7th/cmp-buffer",
-					"hrsh7th/cmp-path",
-				},
-			},
-			config = function()
-				local cmp = require("cmp")
+  {
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+  {
+    "saghen/blink.cmp",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
+    version = "1.*",
 
-				require("luasnip.loaders.from_vscode").lazy_load()
-				cmp.setup({
-					snippet = {
-						expand = function(args)
-							require("luasnip").lsp_expand(args.body)
-						end,
-					},
-					mapping = cmp.mapping.preset.insert({
-						["<TAB>"] = cmp.mapping.confirm({ select = true }),
-						["<CR>"] = cmp.mapping.confirm({ select = true }),
-						--['<Esc>'] = cmp.mapping.abort(),
-					}),
-					sources = cmp.config.sources({
-						{ name = "nvim_lsp" },
-						{ name = "luasnip" },
-						{ name = "buffer" },
-						{ name = "nvim_lua" },
-						{ name = "path" },
-					}),
-				})
-			end,
-		},
-	},
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      keymap = {
+        preset = "default",
+        ["<CR>"] = { "accept", "fallback" },
+        ["<Tab>"] = { "select_and_accept", "fallback" },
+      },
+
+      appearance = {
+        nerd_font_variant = "mono",
+      },
+
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+        providers = {
+          -- make lazydev completions top priority
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100,
+          },
+        },
+      },
+    },
+    -- allows extending the providers array elsewhere in your config
+    opts_extend = { "sources.default" },
+  },
+
+  -- LSP Configuration
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
+    },
+    config = function(_, opts)
+      require("mason").setup({
+        ui = {
+          icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗",
+          },
+        },
+      })
+
+      require("mason-lspconfig").setup({
+        ensure_installed = { "lua_ls" },
+      })
+    end,
+  },
 }

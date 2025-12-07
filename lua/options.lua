@@ -1,7 +1,6 @@
 -- theme & transparency
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("vague")
 local comment_hl = vim.api.nvim_get_hl(0, { name = "LineNr" })
-
 local dim = string.format("#%06x", comment_hl.fg)
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })

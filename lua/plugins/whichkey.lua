@@ -4,13 +4,13 @@ return {
 	opts = {
 		spec = {
 			{ "<leader>c", group = "Code/LSP", icon = " " },
-			{ "<leader>d", icon = "󰆴 " }, -- Delete (no yank)
-			{ "<leader>e", icon = " " }, -- Explorer
-			{ "<leader>g", icon = " " }, -- Grep
-			{ "<leader>p", icon = "󰅇 " }, -- Paste (keep register)
-			{ "<leader>r", icon = " " }, -- Recent files
 			{ "<leader>s", icon = " " }, -- Find files
+			{ "<leader>e", icon = "󰉋 " }, -- Explorer
+			{ "<leader>r", icon = " " }, -- Recent files
+			{ "<leader>g", icon = " " }, -- Grep
 			{ "<leader>x", icon = "󰅖 " }, -- Close buffer
+			{ "<leader>d", icon = " " }, -- Delete (no yank)
+			{ "<leader>p", icon = "󰆒 ", desc = "Paste without copying" }, -- Paste (keep register)
 			{ "<leader><leader>", icon = " " }, -- Source file
 		},
 	},
