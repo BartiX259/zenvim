@@ -8,7 +8,6 @@ return {
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
     bigfile = { enabled = true },
-    dashboard = { enabled = true },
     explorer = { enabled = true },
     indent = { enabled = true },
     input = { enabled = true },
@@ -42,6 +41,75 @@ return {
             },
           },
         },
+      },
+    },
+    dashboard = {
+      enabled = true,
+      sections = {
+        { section = "header", padding = 0 },
+        {
+          padding = { 1, 0 },
+          align = "center",
+          text = {
+            {
+              "Neovim v"
+              .. vim.version().major
+              .. "."
+              .. vim.version().minor
+              .. "."
+              .. vim.version().patch,
+              hl = "Comment",
+            },
+          },
+        },
+        -- VERSION ROW END
+        { section = "keys",   gap = 1,    padding = 1 },
+        { section = "startup" },
+      },
+      preset = {
+        keys = {
+          { icon = " ", key = "s", desc = "Search Files", action = ":lua Snacks.dashboard.pick('files')" },
+          {
+            icon = " ",
+            key = "g",
+            desc = "Find Text",
+            action = ":lua Snacks.dashboard.pick('live_grep')",
+          },
+          {
+            icon = " ",
+            key = "r",
+            desc = "Recent Files",
+            action = ":lua Snacks.dashboard.pick('oldfiles')",
+          },
+          {
+            icon = "󰉋 ",
+            key = "e",
+            desc = "File Explorer",
+            action = function()
+              vim.cmd("enew")
+              Snacks.explorer()
+            end,
+          },
+          {
+            icon = " ",
+            key = "c",
+            desc = "Config",
+            action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
+          },
+          {
+            icon = "󰒲 ",
+            key = "l",
+            desc = "Lazy",
+            action = ":Lazy",
+            enabled = package.loaded.lazy ~= nil,
+          },
+          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
+        header = [[
+ ____  ____ __  __ __ __ __ ___  ___
+   // ||    ||\ || || || || ||\\//||
+  //  ||==  ||\\|| \\ // || || \/ ||
+ //__ ||___ || \||  \V/  || ||    ||]],
       },
     },
   },

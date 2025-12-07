@@ -12,6 +12,7 @@ A simple and chill neovim configuration.
 
 ## screenshots
 
+![dashboard screenshot](.examples/dashboard.png)
 ![file screenshot](.examples/file.png)
 ![explorer screenshot](.examples/explorer.png)
 

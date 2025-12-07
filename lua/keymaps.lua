@@ -34,15 +34,15 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = tru
 -- Buffers
 vim.keymap.set("n", "<TAB>", function()
   vim.cmd("BufferNext")
-end, { desc = "Next buffer" })
+end, { desc = "Next Buffer" })
 
 vim.keymap.set("n", "<S-TAB>", function()
   vim.cmd("BufferPrevious")
-end, { desc = "Prev buffer" })
+end, { desc = "Prev Buffer" })
 
 vim.keymap.set("n", "<leader>x", function()
   vim.cmd("BufferClose")
-end, { desc = "Close buffer" })
+end, { desc = "Close Buffer" })
 
 -- File finding
 local function get_cwd_if_dir()
@@ -52,8 +52,6 @@ local function get_cwd_if_dir()
   end
   return nil
 end
-
--- Keymaps
 vim.keymap.set("n", "<leader>e", function()
   -- Dashboard bugfix
   if vim.bo.filetype == "snacks_dashboard" and #vim.api.nvim_list_bufs() <= 1 then
@@ -63,18 +61,18 @@ vim.keymap.set("n", "<leader>e", function()
   end
   Snacks.explorer({ cwd = get_cwd_if_dir() })
 end, { desc = "File Explorer" })
-
 vim.keymap.set("n", "<leader>s", function()
   Snacks.picker.files({ cwd = get_cwd_if_dir() })
-end, { desc = "Search files" })
-
+end, { desc = "Search Files" })
 vim.keymap.set("n", "<leader>r", function()
   Snacks.picker.recent()
-end, { desc = "Recent files" })
-
+end, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>g", function()
   Snacks.picker.grep({ cwd = get_cwd_if_dir() })
-end, { desc = "Find text" })
+end, { desc = "Find Text" })
+vim.keymap.set("n", "<leader>n", function()
+  vim.cmd("enew")
+end, { desc = "New File" })
 
 --- Insert mode
 vim.g.better_escape_shortcut = { "jk", "kj" }
@@ -104,4 +102,4 @@ vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape" })
 
 vim.keymap.set("n", "<leader><leader>", function()
   vim.cmd("so")
-end, { desc = "Source file" })
+end, { desc = "Source File" })
