@@ -10,7 +10,7 @@ return {
   },
   {
     "saghen/blink.cmp",
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
@@ -23,6 +23,15 @@ return {
         preset = "default",
         ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = { "select_and_accept", "fallback" },
+      },
+      cmdline = {
+        enabled = true,
+        keymap = {
+          ["<Tab>"] = { "show", "accept" },
+          ["<Down>"] = { "select_next", "fallback" },
+          ["<Up>"] = { "select_prev", "fallback" },
+        },
+        completion = { menu = { auto_show = true } },
       },
 
       appearance = {
