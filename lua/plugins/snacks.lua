@@ -52,6 +52,7 @@ return {
       enabled = true,
       sections = {
         { section = "header", padding = 0 },
+        { section = "keys",   gap = 1,    padding = 1 },
         {
           padding = { 1, 0 },
           align = "center",
@@ -67,9 +68,17 @@ return {
             },
           },
         },
-        -- VERSION ROW END
-        { section = "keys",   gap = 1,    padding = 1 },
-        { section = "startup" },
+      },
+      formats = {
+        key = function(item)
+          return { item.key, hl = "key" }
+        end,
+        desc = function(item)
+          return { item.desc, hl = "header" }
+        end,
+        icon = function(item)
+          return { item.icon, hl = "key" }
+        end,
       },
       preset = {
         keys = {
