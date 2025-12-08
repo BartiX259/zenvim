@@ -52,22 +52,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Close explorer when opening a file
-vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("AutoCloseExplorer", { clear = true }),
+-- Automatically make colorscheme transparent
+vim.api.nvim_create_autocmd("Colorscheme", {
+  group = vim.api.nvim_create_augroup("AutoTransparent", { clear = true }),
   callback = function()
-    -- Ignore if we are still inside the explorer or a dashboard
-    local ignore = { "snacks_picker_input", "snacks_picker_list", "snacks_dashboard", "snacks_picker_preview" }
-    if vim.tbl_contains(ignore, vim.bo.filetype) then
-      return
-    end
-    local ok, pickers = pcall(Snacks.picker.get, { source = "explorer" })
-    if ok and pickers then
-      for _, picker in ipairs(pickers) do
-        print("CLOSE")
-        picker:close()
-      end
-    end
+    local dim = string.format("#%06x", vim.api.nvim_get_hl(0, { name = "LineNr" }).fg)
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+    vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none", fg = dim })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "SnacksWinSeparator", { fg = dim })
   end,
 })
 

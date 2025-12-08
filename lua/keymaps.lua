@@ -52,19 +52,33 @@ local function get_cwd_if_dir()
   end
   return nil
 end
+local function close_pickers()
+  local ok, pickers = pcall(Snacks.picker.get, {})
+  if ok and pickers then
+    for _, picker in ipairs(pickers) do
+      picker:close()
+    end
+  end
+end
+
 vim.keymap.set("n", "<leader>e", function()
+  close_pickers()
   Snacks.explorer({ cwd = get_cwd_if_dir() })
 end, { desc = "File Explorer" })
 vim.keymap.set("n", "<leader>s", function()
+  close_pickers()
   Snacks.picker.files({ cwd = get_cwd_if_dir() })
 end, { desc = "Search Files" })
 vim.keymap.set("n", "<leader>r", function()
+  close_pickers()
   Snacks.picker.recent()
 end, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>g", function()
+  close_pickers()
   Snacks.picker.grep({ cwd = get_cwd_if_dir() })
 end, { desc = "Find Text" })
 vim.keymap.set("n", "<leader>n", function()
+  close_pickers()
   vim.cmd("enew")
 end, { desc = "New File" })
 

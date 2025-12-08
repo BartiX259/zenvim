@@ -10,6 +10,7 @@ return {
   },
   {
     "saghen/blink.cmp",
+    event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
@@ -47,6 +48,7 @@ return {
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",

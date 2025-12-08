@@ -31,7 +31,19 @@ return {
           -- Close the explorer after opening a file
           jump = { close = true },
           layout = {
+            preset = function()
+              return vim.o.columns >= 120 and "default" or "vertical"
+            end,
+            preview = "file",
+            layout = { height = 0.75, width = 0.5 },
             backdrop = false,
+          },
+          win = {
+            list = {
+              keys = {
+                ["<leader>/"] = false,
+              },
+            },
           },
         },
       },
