@@ -8,12 +8,16 @@ end
 
 -- Highlight search
 vim.keymap.set("n", "n", function()
-  vim.cmd("normal! n")
+  pcall(function()
+    vim.cmd("normal! n")
+  end)
   vim.opt.hlsearch = true
 end, { desc = "Next search result" })
 
 vim.keymap.set("n", "N", function()
-  vim.cmd("normal! N")
+  pcall(function()
+    vim.cmd("normal! N")
+  end)
   vim.opt.hlsearch = true
 end, { desc = "Prev search result" })
 
@@ -23,13 +27,26 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action
 vim.keymap.set("n", "<leader>cn", function()
   vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Next diagnostic" })
-
 vim.keymap.set("n", "<leader>cp", function()
   vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Prev diagnostic" })
 
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, desc = "Goto declaration" })
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Goto definition" })
+
+-- Git
+vim.keymap.set("n", "<leader>hh", function()
+  vim.cmd("Gitsigns preview_hunk_inline")
+end, { desc = "Preview git hunk" })
+vim.keymap.set("n", "<leader>hr", function()
+  vim.cmd("Gitsigns reset_hunk")
+end, { desc = "Reset git hunk" })
+vim.keymap.set("n", "<leader>hn", function()
+  vim.cmd("Gitsigns next_hunk")
+end, { desc = "Next git hunk" })
+vim.keymap.set("n", "<leader>hp", function()
+  vim.cmd("Gitsigns prev_hunk")
+end, { desc = "Previous git hunk" })
 
 -- Buffers
 vim.keymap.set("n", "<TAB>", function()

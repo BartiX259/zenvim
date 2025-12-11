@@ -7,6 +7,7 @@ return {
     },
     spec = {
       { "<leader>c", group = "Code/LSP", icon = " " },
+      { "<leader>h", group = "Git Hunks" },
       { "<leader>s", icon = " " }, -- Find files
       { "<leader>e", icon = "󰉋 " }, -- Explorer
       { "<leader>r", icon = " " }, -- Recent files
