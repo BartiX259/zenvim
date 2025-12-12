@@ -12,6 +12,7 @@ return {
       { "<leader>e", icon = "󰉋 " }, -- Explorer
       { "<leader>r", icon = " " }, -- Recent files
       { "<leader>g", icon = " " }, -- Grep
+      { "<leader>*", icon = " " }, -- Grep under cursor
       { "<leader>x", icon = "󰅖 " }, -- Close buffer
       { "<leader>d", icon = " " }, -- Delete (no yank)
       { "<leader>p", icon = "󰆒 ", desc = "Paste without copying" }, -- Paste (keep register)
