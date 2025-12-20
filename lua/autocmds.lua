@@ -65,6 +65,10 @@ vim.api.nvim_create_autocmd("Colorscheme", {
   end,
 })
 
+-- Disable auto comment on new line
+vim.cmd('autocmd BufEnter * set formatoptions-=cro')
+vim.cmd('autocmd BufEnter * setlocal formatoptions-=cro')
+
 -- CHEZMOI AUTOCMDS
 
 if vim.fn.executable("chezmoi") == 1 then
