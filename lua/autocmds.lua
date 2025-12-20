@@ -67,73 +67,75 @@ vim.api.nvim_create_autocmd("Colorscheme", {
 
 -- CHEZMOI AUTOCMDS
 
--- When opening a file managed by chezmoi, open the source file instead.
-vim.api.nvim_create_autocmd("BufReadPost", {
-  group = vim.api.nvim_create_augroup("ChezmoiEditHook", { clear = true }),
-  pattern = "*",
-  callback = function(ev)
-    local filepath = vim.fn.expand("%:p")
+if vim.fn.executable("chezmoi") == 1 then
+  -- When opening a file managed by chezmoi, open the source file instead.
+  vim.api.nvim_create_autocmd("BufReadPost", {
+    group = vim.api.nvim_create_augroup("ChezmoiEditHook", { clear = true }),
+    pattern = "*",
+    callback = function(ev)
+      local filepath = vim.fn.expand("%:p")
 
-    -- Prevent infinite loop
-    if filepath:find("/.local/share/chezmoi/") then
-      return
-    end
-    local cmd = { "chezmoi", "source-path", filepath }
-    local output = vim.fn.system(cmd)
-
-    if vim.v.shell_error == 0 then
-      local source_path = vim.trim(output)
-      local original_ft = vim.bo[ev.buf].filetype
-      local original_buf = ev.buf
-
-      if source_path ~= filepath then
-        vim.schedule(function()
-          vim.cmd("edit " .. vim.fn.fnameescape(source_path))
-          if original_ft ~= "" then
-            vim.bo.filetype = original_ft
-          end
-          if vim.api.nvim_buf_is_valid(original_buf) then
-            vim.api.nvim_buf_delete(original_buf, { force = true })
-          end
-          vim.notify("Redirected to chezmoi source file", vim.log.levels.INFO)
-        end)
-      end
-    end
-  end,
-})
-
--- Automatically apply chezmoi config
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = vim.api.nvim_create_augroup("ChezmoiConfigHook", { clear = true }),
-  pattern = { "*/chezmoi/chezmoi.toml", "*/.local/share/chezmoi/*" },
-  callback = function(ev)
-    local args = { "chezmoi", "apply" }
-
-    -- Optimization: If you are editing a specific source file (not the main config),
-    -- only apply that specific file. This is faster.
-    local file = ev.match
-    if not file:match("chezmoi.toml") then
-      local target_path = vim.trim(vim.fn.system({ "chezmoi", "target-path", file }))
-      if vim.v.shell_error ~= 0 then
+      -- Prevent infinite loop
+      if filepath:find("/.local/share/chezmoi/") then
         return
       end
-      vim.fn.system({ "chezmoi", "source-path", target_path })
-      if vim.v.shell_error ~= 0 then
-        return
-      end
-      table.insert(args, "--source-path")
-      table.insert(args, file)
-    end
+      local cmd = { "chezmoi", "source-path", filepath }
+      local output = vim.fn.system(cmd)
 
-    -- Run the command
-    vim.fn.jobstart(args, {
-      on_exit = function(_, code)
-        if code == 0 then
-          vim.notify("Chezmoi applied successfully!", vim.log.levels.INFO)
-        else
-          vim.notify("Chezmoi failed to apply. Check :messages", vim.log.levels.ERROR)
+      if vim.v.shell_error == 0 then
+        local source_path = vim.trim(output)
+        local original_ft = vim.bo[ev.buf].filetype
+        local original_buf = ev.buf
+
+        if source_path ~= filepath then
+          vim.schedule(function()
+            vim.cmd("edit " .. vim.fn.fnameescape(source_path))
+            if original_ft ~= "" then
+              vim.bo.filetype = original_ft
+            end
+            if vim.api.nvim_buf_is_valid(original_buf) then
+              vim.api.nvim_buf_delete(original_buf, { force = true })
+            end
+            vim.notify("Redirected to chezmoi source file", vim.log.levels.INFO)
+          end)
         end
-      end,
-    })
-  end,
-})
+      end
+    end,
+  })
+
+  -- Automatically apply chezmoi config
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    group = vim.api.nvim_create_augroup("ChezmoiConfigHook", { clear = true }),
+    pattern = { "*/chezmoi/chezmoi.toml", "*/.local/share/chezmoi/*" },
+    callback = function(ev)
+      local args = { "chezmoi", "apply" }
+
+      -- Optimization: If you are editing a specific source file (not the main config),
+      -- only apply that specific file. This is faster.
+      local file = ev.match
+      if not file:match("chezmoi.toml") then
+        local target_path = vim.trim(vim.fn.system({ "chezmoi", "target-path", file }))
+        if vim.v.shell_error ~= 0 then
+          return
+        end
+        vim.fn.system({ "chezmoi", "source-path", target_path })
+        if vim.v.shell_error ~= 0 then
+          return
+        end
+        table.insert(args, "--source-path")
+        table.insert(args, file)
+      end
+
+      -- Run the command
+      vim.fn.jobstart(args, {
+        on_exit = function(_, code)
+          if code == 0 then
+            vim.notify("Chezmoi applied successfully!", vim.log.levels.INFO)
+          else
+            vim.notify("Chezmoi failed to apply. Check :messages", vim.log.levels.ERROR)
+          end
+        end,
+      })
+    end,
+  })
+end
