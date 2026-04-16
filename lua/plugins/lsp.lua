@@ -21,7 +21,8 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        ["<CR>"] = { "accept", "fallback" },
+        -- Complete only with tab
+        -- ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = { "select_and_accept", "fallback" },
       },
       cmdline = {
