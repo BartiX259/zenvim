@@ -62,12 +62,49 @@ vim.api.nvim_create_autocmd("Colorscheme", {
     vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none", fg = dim })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "SnacksWinSeparator", { fg = dim })
+    -- Dynamically build ExtraWhitespace highlight group
+    local error_hl = vim.api.nvim_get_hl(0, { name = "ErrorMsg", link = false })
+    local normal_hl = vim.api.nvim_get_hl(0, { name = "@variable", link = false })
+    vim.api.nvim_set_hl(0, "ExtraWhitespace", {
+      bg = error_hl.fg,
+      fg = normal_hl.fg,
+    })
   end,
 })
 
 -- Disable auto comment on new line
-vim.cmd('autocmd BufEnter * set formatoptions-=cro')
-vim.cmd('autocmd BufEnter * setlocal formatoptions-=cro')
+vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
+  group = vim.api.nvim_create_augroup("DisableAutoComment", { clear = true }),
+  pattern = "*",
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
+})
+
+-- Highlight trailing whitespace
+local ws_group = vim.api.nvim_create_augroup("HighlightTrailingWhitespace", { clear = true })
+vim.api.nvim_create_autocmd({ "BufReadPost", "InsertLeave" }, {
+  group = ws_group,
+  callback = function()
+    vim.cmd([[match ExtraWhitespace /\s\+$/]])
+  end,
+})
+vim.api.nvim_create_autocmd({ "BufLeave", "InsertEnter" }, {
+  group = ws_group,
+  callback = function()
+    vim.cmd([[match none]])
+  end,
+})
+
+-- Enable wrap and linebreak for text files
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("WrapTextFiles", { clear = true }),
+  pattern = { "markdown", "text", "plaintex", "tex", "gitcommit", "help", "org" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})
 
 -- CHEZMOI AUTOCMDS
 
