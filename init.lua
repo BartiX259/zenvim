@@ -20,5 +20,6 @@ require("lazy").setup("plugins")
 
 -- Source lua files
 require("autocmds")
+require("commands")
 require("options")
 require("keymaps")
