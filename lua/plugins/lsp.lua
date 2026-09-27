@@ -9,6 +9,17 @@ return {
     },
   },
   {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "LspAttach",
+    priority = 1000,
+    opts = {
+      preset = "classic", -- "modern", "classic", "minimal", "powerline", etc.
+      options = {
+        show_all_diags_on_cursorline = true,
+      },
+    },
+  },
+  {
     "saghen/blink.cmp",
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
@@ -63,8 +74,9 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "saghen/blink.cmp",
+      "b0o/SchemaStore.nvim",
     },
-    config = function(_, opts)
+    config = function()
       require("mason").setup({
         ui = {
           icons = {
@@ -75,8 +87,32 @@ return {
         },
       })
 
+      vim.lsp.config("*", {
+        capabilities = require("blink.cmp").get_lsp_capabilities(),
+      })
+      -- SchemaStore stuff
+      vim.lsp.config("jsonls", {
+        settings = {
+          json = {
+            schemas = require("schemastore").json.schemas(),
+            validate = { enable = true },
+          },
+        },
+      })
+      vim.lsp.config("yamlls", {
+        settings = {
+          yaml = {
+            schemaStore = {
+              enable = false,
+              url = "",
+            },
+            schemas = require("schemastore").yaml.schemas(),
+          },
+        },
+      })
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls" },
+        ensure_installed = { "lua_ls", "jsonls", "yamlls" },
+        automatic_enable = true,
       })
     end,
   },

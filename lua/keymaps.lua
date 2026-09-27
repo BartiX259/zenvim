@@ -21,46 +21,6 @@ vim.keymap.set("n", "N", function()
   vim.opt.hlsearch = true
 end, { desc = "Prev search result" })
 
---- Lsp
-vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
-vim.keymap.set("n", "<leader>cn", function()
-  vim.diagnostic.jump({ count = 1, float = true })
-end, { desc = "Next diagnostic" })
-vim.keymap.set("n", "<leader>cp", function()
-  vim.diagnostic.jump({ count = -1, float = true })
-end, { desc = "Prev diagnostic" })
-
-vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, desc = "Goto declaration" })
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "Goto definition" })
-
--- Git
-vim.keymap.set("n", "<leader>hh", function()
-  vim.cmd("Gitsigns preview_hunk_inline")
-end, { desc = "Preview git hunk" })
-vim.keymap.set("n", "<leader>hr", function()
-  vim.cmd("Gitsigns reset_hunk")
-end, { desc = "Reset git hunk" })
-vim.keymap.set("n", "<leader>hn", function()
-  vim.cmd("Gitsigns next_hunk")
-end, { desc = "Next git hunk" })
-vim.keymap.set("n", "<leader>hp", function()
-  vim.cmd("Gitsigns prev_hunk")
-end, { desc = "Previous git hunk" })
-
--- Buffers
-vim.keymap.set("n", "<TAB>", function()
-  vim.cmd("BufferNext")
-end, { desc = "Next Buffer" })
-
-vim.keymap.set("n", "<S-TAB>", function()
-  vim.cmd("BufferPrevious")
-end, { desc = "Prev Buffer" })
-
-vim.keymap.set("n", "<leader>x", function()
-  vim.cmd("BufferClose")
-end, { desc = "Close Buffer" })
-
 -- File finding
 local function get_cwd_if_dir()
   local first_arg = vim.fn.argv(0)
@@ -121,6 +81,76 @@ vim.keymap.set("n", "<leader>n", function()
   close_pickers()
   vim.cmd("enew")
 end, { desc = "New File" })
+
+--- Navigation
+local sev = vim.diagnostic.severity
+local function diag_jump(count, severity)
+  return function()
+    local opts = { count = count, float = false }
+    if severity then
+      opts.severity = severity
+    end
+    vim.diagnostic.jump(opts)
+  end
+end
+vim.keymap.set("n", "gh", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next git hunk" })
+vim.keymap.set("n", "gph", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev git hunk" })
+vim.keymap.set("n", "gH", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev git hunk" })
+
+vim.keymap.set("n", "ge", diag_jump(1, sev.ERROR), { desc = "Next error" })
+vim.keymap.set("n", "gpe", diag_jump(-1, sev.ERROR), { desc = "Prev error" })
+vim.keymap.set("n", "gE", diag_jump(-1, sev.ERROR), { desc = "Prev error" })
+
+vim.keymap.set("n", "gw", diag_jump(1, sev.WARN), { desc = "Next warning" })
+vim.keymap.set("n", "gpw", diag_jump(-1, sev.WARN), { desc = "Prev warning" })
+vim.keymap.set("n", "gW", diag_jump(-1, sev.WARN), { desc = "Prev warning" })
+
+vim.keymap.set("n", "gl", diag_jump(1), { desc = "Next diagnostic" }) -- L for lint
+vim.keymap.set("n", "gpl", diag_jump(-1), { desc = "Prev diagnostic" })
+vim.keymap.set("n", "gL", diag_jump(-1), { desc = "Prev diagnostic" })
+
+vim.keymap.set("n", "gq", "<cmd>cnext<cr>", { desc = "Next quickfix item" })
+vim.keymap.set("n", "gpq", "<cmd>cprev<cr>", { desc = "Prev quickfix item" })
+vim.keymap.set("n", "gQ", "<cmd>cprev<cr>", { desc = "Prev quickfix item" })
+
+--- Lsp
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
+vim.keymap.set("n", "gi", function()
+  close_pickers()
+  Snacks.picker.lsp_implementations()
+end, { desc = "Goto implementations" })
+
+pcall(vim.keymap.del, "n", "gra")
+pcall(vim.keymap.del, "n", "grr")
+pcall(vim.keymap.del, "n", "gri")
+pcall(vim.keymap.del, "n", "grt")
+pcall(vim.keymap.del, "n", "grx")
+vim.keymap.set("n", "gr", function()
+  close_pickers()
+  Snacks.picker.lsp_references()
+end, { desc = "Goto references" })
+
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
+vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename symbol" })
+
+-- Git
+vim.keymap.set("n", "<leader>hh", "<cmd>Gitsigns preview_hunk_inline<cr>", { desc = "Preview hunk" })
+vim.keymap.set("n", "<leader>hr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
+
+-- Buffers
+vim.keymap.set("n", "<TAB>", function()
+  vim.cmd("BufferNext")
+end, { desc = "Next Buffer" })
+
+vim.keymap.set("n", "<S-TAB>", function()
+  vim.cmd("BufferPrevious")
+end, { desc = "Prev Buffer" })
+
+vim.keymap.set("n", "<leader>x", function()
+  vim.cmd("BufferClose")
+end, { desc = "Close Buffer" })
 
 --- Insert mode
 vim.g.better_escape_shortcut = { "jk", "kj" }

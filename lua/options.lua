@@ -1,4 +1,4 @@
--- theme & transparency
+-- theme
 vim.cmd.colorscheme("vague")
 
 -- Basic settings
@@ -38,6 +38,7 @@ vim.opt.winblend = 0                              -- Floating window transparenc
 vim.opt.conceallevel = 0                          -- Don't hide markup
 vim.opt.concealcursor = ""                        -- Don't hide cursor line markup
 vim.opt.synmaxcol = 300                           -- Syntax highlighting limit
+vim.opt.fillchars:append({ diff = " " })          -- No dashes in diffs
 
 -- File handling
 vim.opt.backup = false                                         -- Don't create backup files
