@@ -61,6 +61,7 @@ vim.api.nvim_create_autocmd("Colorscheme", {
     vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
     vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none", fg = dim })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "FloatBorder", { fg = dim, bg = "none" })
     vim.api.nvim_set_hl(0, "SnacksWinSeparator", { fg = dim })
     -- Dynamically build ExtraWhitespace highlight group
     local error_hl = vim.api.nvim_get_hl(0, { name = "ErrorMsg", link = false })

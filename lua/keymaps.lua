@@ -76,8 +76,8 @@ local function close_pickers()
       picker:close()
     end
   end
+  vim.cmd("cclose")
 end
-
 vim.keymap.set("n", "<leader>e", function()
   close_pickers()
   Snacks.explorer({ cwd = get_cwd_if_dir() })
@@ -98,6 +98,25 @@ vim.keymap.set("n", "<leader>*", function()
   close_pickers()
   Snacks.picker.grep_word({ cwd = get_cwd_if_dir() })
 end, { desc = "Grep Word Under Cursor" })
+vim.keymap.set("n", "<leader>q", function()
+  close_pickers()
+  vim.cmd("copen")
+end, { desc = "Quick fix list" })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function(event)
+    vim.keymap.set("n", "<Esc>", "<cmd>cclose<cr>", {
+      buffer = event.buf,
+      silent = true,
+      desc = "Close Quickfix",
+    })
+    vim.keymap.set("n", "<leader>q", "<cmd>cclose<cr>", {
+      buffer = event.buf,
+      silent = true,
+      desc = "Close Quickfix",
+    })
+  end,
+})
 vim.keymap.set("n", "<leader>n", function()
   close_pickers()
   vim.cmd("enew")
@@ -123,11 +142,6 @@ vim.keymap.set("n", "<A-O>", "O<Esc>", { desc = "Insert newline above" })
 vim.keymap.set("n", "J", lazy_comb("mzJ`z"), { desc = "Join lines" })
 vim.keymap.set("n", "<C-d>", lazy_comb("<C-d>zz"), { desc = "Scroll down" })
 vim.keymap.set("n", "<C-u>", lazy_comb("<C-u>zz"), { desc = "Scroll up" })
-
--- greatest remap ever
-vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "Paste without copying" })
-
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete without copying" })
 
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>", { desc = "Escape" })
