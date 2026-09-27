@@ -11,7 +11,7 @@
 -- Automatically toggle highlight search
 local ns = vim.api.nvim_create_augroup("AutoSearchHighlight", { clear = true })
 vim.api.nvim_create_autocmd("CmdlineLeave", {
-  group = ns,
+  group    = ns,
   callback = function()
     local cmd_type = vim.fn.getcmdtype()
     if cmd_type == "/" or cmd_type == "?" then

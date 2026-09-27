@@ -53,7 +53,7 @@ end, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>g", function()
   close_pickers()
   Snacks.picker.grep({ cwd = get_cwd_if_dir() })
-end, { desc = "Find Text" })
+end, { desc = "Grep" })
 vim.keymap.set("n", "<leader>*", function()
   close_pickers()
   Snacks.picker.grep_word({ cwd = get_cwd_if_dir() })
@@ -93,9 +93,9 @@ local function diag_jump(count, severity)
     vim.diagnostic.jump(opts)
   end
 end
-vim.keymap.set("n", "gh", "<cmd>Gitsigns next_hunk<cr>", { desc = "Next git hunk" })
-vim.keymap.set("n", "gph", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev git hunk" })
-vim.keymap.set("n", "gH", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev git hunk" })
+vim.keymap.set("n", "gh", function() require("mini.diff").goto_hunk("next") end, { desc = "Next git hunk" })
+vim.keymap.set("n", "gph", function() require("mini.diff").goto_hunk("prev") end, { desc = "Prev git hunk" })
+vim.keymap.set("n", "gH", function() require("mini.diff").goto_hunk("prev") end, { desc = "Prev git hunk" })
 
 vim.keymap.set("n", "ge", diag_jump(1, sev.ERROR), { desc = "Next error" })
 vim.keymap.set("n", "gpe", diag_jump(-1, sev.ERROR), { desc = "Prev error" })
@@ -136,8 +136,12 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action
 vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename symbol" })
 
 -- Git
-vim.keymap.set("n", "<leader>hh", "<cmd>Gitsigns preview_hunk_inline<cr>", { desc = "Preview hunk" })
-vim.keymap.set("n", "<leader>hr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset hunk" })
+vim.keymap.set("n", "<leader>d", function()
+  require("mini.diff").toggle_overlay(0)
+end, { desc = "View diff" })
+vim.keymap.set("n", "<leader>v", function()
+  return require("mini.diff").operator("reset") .. "gh"
+end, { expr = true, remap = true, desc = "Revert hunk" })
 
 -- Buffers
 vim.keymap.set("n", "<TAB>", function()

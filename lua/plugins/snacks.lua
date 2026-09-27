@@ -82,23 +82,28 @@ return {
       },
       preset = {
         keys = {
-          { icon = " ", key = "s", desc = "Search Files", action = ":lua Snacks.dashboard.pick('files')" },
           {
-            icon = " ",
+            icon = " ",
+            key = "s",
+            desc = "Search",
+            action = ":lua Snacks.dashboard.pick('files')"
+          },
+          {
+            icon = "󰱽 ",
             key = "g",
-            desc = "Find Text",
+            desc = "Grep",
             action = ":lua Snacks.dashboard.pick('live_grep')",
           },
           {
             icon = " ",
             key = "r",
-            desc = "Recent Files",
+            desc = "Recent",
             action = ":lua Snacks.dashboard.pick('oldfiles')",
           },
           {
-            icon = "󰉋 ",
+            icon = "󰉖 ",
             key = "e",
-            desc = "File Explorer",
+            desc = "Explorer",
             action = ":lua Snacks.explorer()",
           },
           {
