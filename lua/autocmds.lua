@@ -107,6 +107,39 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Auto install langs
+local langs = require("languages")
+local dismissed = {}
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(ev)
+    local ft = ev.match
+    -- Check Language
+    local lang_cfg = langs.languages[ft]
+    if lang_cfg and not dismissed[ft] and langs.missing(lang_cfg) then
+      vim.schedule(function()
+        vim.ui.select({ "Yes", "No" }, { prompt = "Install " .. langs.label(lang_cfg) .. " for " .. ft .. "?" },
+          function(c)
+            if c == "Yes" then vim.cmd("LangInstall " .. ft) else dismissed[ft] = true end
+          end)
+      end)
+    end
+    -- Check Frameworks via root markers
+    for name, fw in pairs(langs.frameworks) do
+      if not dismissed[name] and vim.tbl_contains(fw.ft, ft) and langs.missing(fw) then
+        if vim.fs.root(0, fw.root) then
+          vim.schedule(function()
+            vim.ui.select({ "Yes", "No" }, { prompt = "Install " .. langs.label(fw) .. " for " .. name .. "?" },
+              function(c)
+                if c == "Yes" then vim.cmd("LangInstall " .. name) else dismissed[name] = true end
+              end)
+          end)
+        end
+      end
+    end
+  end,
+})
+
 -- CHEZMOI AUTOCMDS
 
 if vim.fn.executable("chezmoi") == 1 then

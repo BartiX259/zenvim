@@ -46,6 +46,12 @@ return {
             },
           },
         },
+        git_status = {
+          title = "Changed Files",
+        },
+        files = {
+          title = "Search",
+        },
       },
     },
     dashboard = {
@@ -105,6 +111,12 @@ return {
             key = "e",
             desc = "Explorer",
             action = ":lua Snacks.explorer()",
+          },
+          {
+            icon = " ",
+            key = "f",
+            desc = "Changed files",
+            action = ":lua Snacks.picker.git_status()",
           },
           {
             icon = " ",
